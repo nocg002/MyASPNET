@@ -1,0 +1,597 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AAAAAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Authors">
+          <Key>
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="AuthorID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AuthorName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Gender" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Num" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BookAuthors">
+          <Key>
+            <PropertyRef Name="ProductID" />
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="ProductID" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="AuthorID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AuthorType" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="BookInfor">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="PublisherID" Type="uniqueidentifier" />
+          <Property Name="IssueDate" Type="date" Nullable="false" />
+          <Property Name="ISBN13" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="LanguageID" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Introduction" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AuthorAbout" Type="nvarchar(max)" />
+          <Property Name="Catalog" Type="nvarchar(max)" />
+          <Property Name="Preface" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryPrev" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CategoryID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Sort" Type="tinyint" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MyName">
+          <Key>
+            <PropertyRef Name="pubID" />
+          </Key>
+          <Property Name="pubID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductImages">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ProductID" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="ImageID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Folder" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="OrigFileName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sort" Type="tinyint" Nullable="false" />
+          <Property Name="Master" Type="bit" Nullable="false" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="Publish" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="CategoryID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="Recommend" Type="nvarchar" MaxLength="50" />
+          <Property Name="CoverPrice" Type="decimal" Precision="7" Scale="0" Nullable="false" />
+          <Property Name="Discount" Type="float" Nullable="false" />
+          <Property Name="SellingPrice" Type="decimal" Precision="7" Scale="0" Nullable="false" />
+          <Property Name="OnShelf" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Publishers">
+          <Key>
+            <PropertyRef Name="PublisherID" />
+          </Key>
+          <Property Name="PublisherID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PublisherName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ContactName" Type="nvarchar" MaxLength="30" />
+          <Property Name="Telephone" Type="varchar" MaxLength="20" />
+          <Property Name="MobilePhone" Type="varchar" MaxLength="20" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="30" />
+          <Property Name="Num" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_BookAuthors_Authors">
+          <End Role="Authors" Type="Self.Authors" Multiplicity="1" />
+          <End Role="BookAuthors" Type="Self.BookAuthors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authors">
+              <PropertyRef Name="AuthorID" />
+            </Principal>
+            <Dependent Role="BookAuthors">
+              <PropertyRef Name="AuthorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookAuthors_BookInfor">
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BookAuthors" Type="Self.BookAuthors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookInfor">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="BookAuthors">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookInfor_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="BookInfor">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookInfor_Publishers">
+          <End Role="Publishers" Type="Self.Publishers" Multiplicity="0..1" />
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publishers">
+              <PropertyRef Name="PublisherID" />
+            </Principal>
+            <Dependent Role="BookInfor">
+              <PropertyRef Name="PublisherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductImages_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProductImages" Type="Self.ProductImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductImages">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AAAAAModelStoreContainer">
+          <EntitySet Name="Authors" EntityType="Self.Authors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookAuthors" EntityType="Self.BookAuthors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookInfor" EntityType="Self.BookInfor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MyName" EntityType="Self.MyName" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductImages" EntityType="Self.ProductImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Publishers" EntityType="Self.Publishers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BookAuthors_Authors" Association="Self.FK_BookAuthors_Authors">
+            <End Role="Authors" EntitySet="Authors" />
+            <End Role="BookAuthors" EntitySet="BookAuthors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookAuthors_BookInfor" Association="Self.FK_BookAuthors_BookInfor">
+            <End Role="BookInfor" EntitySet="BookInfor" />
+            <End Role="BookAuthors" EntitySet="BookAuthors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookInfor_Products" Association="Self.FK_BookInfor_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="BookInfor" EntitySet="BookInfor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookInfor_Publishers" Association="Self.FK_BookInfor_Publishers">
+            <End Role="Publishers" EntitySet="Publishers" />
+            <End Role="BookInfor" EntitySet="BookInfor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductImages_Products" Association="Self.FK_ProductImages_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductImages" EntitySet="ProductImages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_Categories" Association="Self.FK_Products_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AAAAAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="AuthorID" Type="Guid" Nullable="false" />
+          <Property Name="AuthorName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Num" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="BookAuthors" Relationship="Self.FK_BookAuthors_Authors" FromRole="Authors" ToRole="BookAuthors" />
+        </EntityType>
+        <EntityType Name="BookAuthor">
+          <Key>
+            <PropertyRef Name="ProductID" />
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="AuthorID" Type="Guid" Nullable="false" />
+          <Property Name="AuthorType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Author" Relationship="Self.FK_BookAuthors_Authors" FromRole="BookAuthors" ToRole="Authors" />
+          <NavigationProperty Name="BookInfor" Relationship="Self.FK_BookAuthors_BookInfor" FromRole="BookAuthors" ToRole="BookInfor" />
+        </EntityType>
+        <EntityType Name="BookInfor">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="PublisherID" Type="Guid" />
+          <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ISBN13" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LanguageID" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Introduction" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AuthorAbout" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Catalog" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Preface" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BookAuthors" Relationship="Self.FK_BookAuthors_BookInfor" FromRole="BookInfor" ToRole="BookAuthors" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_BookInfor_Products" FromRole="BookInfor" ToRole="Products" />
+          <NavigationProperty Name="Publisher" Relationship="Self.FK_BookInfor_Publishers" FromRole="BookInfor" ToRole="Publishers" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryPrev" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Sort" Type="Byte" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Categories" FromRole="Categories" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="MyName">
+          <Key>
+            <PropertyRef Name="pubID" />
+          </Key>
+          <Property Name="pubID" Type="Guid" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductImage">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ImageID" Type="Guid" Nullable="false" />
+          <Property Name="Folder" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OrigFileName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Sort" Type="Byte" Nullable="false" />
+          <Property Name="Master" Type="Boolean" Nullable="false" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="Publish" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductImages_Products" FromRole="ProductImages" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CategoryID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Recommend" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoverPrice" Type="Decimal" Precision="7" Scale="0" Nullable="false" />
+          <Property Name="Discount" Type="Double" Nullable="false" />
+          <Property Name="SellingPrice" Type="Decimal" Precision="7" Scale="0" Nullable="false" />
+          <Property Name="OnShelf" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BookInfor" Relationship="Self.FK_BookInfor_Products" FromRole="Products" ToRole="BookInfor" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Products_Categories" FromRole="Products" ToRole="Categories" />
+          <NavigationProperty Name="ProductImages" Relationship="Self.FK_ProductImages_Products" FromRole="Products" ToRole="ProductImages" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="PublisherID" />
+          </Key>
+          <Property Name="PublisherID" Type="Guid" Nullable="false" />
+          <Property Name="PublisherName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContactName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MobilePhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Num" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="BookInfors" Relationship="Self.FK_BookInfor_Publishers" FromRole="Publishers" ToRole="BookInfor" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_BookAuthors_Authors">
+          <End Role="Authors" Type="Self.Author" Multiplicity="1" />
+          <End Role="BookAuthors" Type="Self.BookAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authors">
+              <PropertyRef Name="AuthorID" />
+            </Principal>
+            <Dependent Role="BookAuthors">
+              <PropertyRef Name="AuthorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookAuthors_BookInfor">
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BookAuthors" Type="Self.BookAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookInfor">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="BookAuthors">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookInfor_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="BookInfor">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BookInfor_Publishers">
+          <End Role="Publishers" Type="Self.Publisher" Multiplicity="0..1" />
+          <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publishers">
+              <PropertyRef Name="PublisherID" />
+            </Principal>
+            <Dependent Role="BookInfor">
+              <PropertyRef Name="PublisherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_Categories">
+          <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductImages_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProductImages" Type="Self.ProductImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductImages">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AAAAAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Authors" EntityType="Self.Author" />
+          <EntitySet Name="BookAuthors" EntityType="Self.BookAuthor" />
+          <EntitySet Name="BookInfors" EntityType="Self.BookInfor" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="MyNames" EntityType="Self.MyName" />
+          <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Publishers" EntityType="Self.Publisher" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_BookAuthors_Authors" Association="Self.FK_BookAuthors_Authors">
+            <End Role="Authors" EntitySet="Authors" />
+            <End Role="BookAuthors" EntitySet="BookAuthors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookAuthors_BookInfor" Association="Self.FK_BookAuthors_BookInfor">
+            <End Role="BookInfor" EntitySet="BookInfors" />
+            <End Role="BookAuthors" EntitySet="BookAuthors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookInfor_Products" Association="Self.FK_BookInfor_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="BookInfor" EntitySet="BookInfors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BookInfor_Publishers" Association="Self.FK_BookInfor_Publishers">
+            <End Role="Publishers" EntitySet="Publishers" />
+            <End Role="BookInfor" EntitySet="BookInfors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_Categories" Association="Self.FK_Products_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductImages_Products" Association="Self.FK_ProductImages_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductImages" EntitySet="ProductImages" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AAAAAModelStoreContainer" CdmEntityContainer="AAAAAEntities">
+          <EntitySetMapping Name="Authors">
+            <EntityTypeMapping TypeName="AAAAAModel.Author">
+              <MappingFragment StoreEntitySet="Authors">
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookAuthors">
+            <EntityTypeMapping TypeName="AAAAAModel.BookAuthor">
+              <MappingFragment StoreEntitySet="BookAuthors">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+                <ScalarProperty Name="AuthorType" ColumnName="AuthorType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookInfors">
+            <EntityTypeMapping TypeName="AAAAAModel.BookInfor">
+              <MappingFragment StoreEntitySet="BookInfor">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="ISBN13" ColumnName="ISBN13" />
+                <ScalarProperty Name="LanguageID" ColumnName="LanguageID" />
+                <ScalarProperty Name="Introduction" ColumnName="Introduction" />
+                <ScalarProperty Name="AuthorAbout" ColumnName="AuthorAbout" />
+                <ScalarProperty Name="Catalog" ColumnName="Catalog" />
+                <ScalarProperty Name="Preface" ColumnName="Preface" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="AAAAAModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="CategoryPrev" ColumnName="CategoryPrev" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Sort" ColumnName="Sort" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MyNames">
+            <EntityTypeMapping TypeName="AAAAAModel.MyName">
+              <MappingFragment StoreEntitySet="MyName">
+                <ScalarProperty Name="pubID" ColumnName="pubID" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductImages">
+            <EntityTypeMapping TypeName="AAAAAModel.ProductImage">
+              <MappingFragment StoreEntitySet="ProductImages">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ImageID" ColumnName="ImageID" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="OrigFileName" ColumnName="OrigFileName" />
+                <ScalarProperty Name="Sort" ColumnName="Sort" />
+                <ScalarProperty Name="Master" ColumnName="Master" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Publish" ColumnName="Publish" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="AAAAAModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Recommend" ColumnName="Recommend" />
+                <ScalarProperty Name="CoverPrice" ColumnName="CoverPrice" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="SellingPrice" ColumnName="SellingPrice" />
+                <ScalarProperty Name="OnShelf" ColumnName="OnShelf" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Publishers">
+            <EntityTypeMapping TypeName="AAAAAModel.Publisher">
+              <MappingFragment StoreEntitySet="Publishers">
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="AAAAAModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

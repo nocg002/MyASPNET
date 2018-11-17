@@ -11,6 +11,9 @@ using Microsoft.Owin.Security;
 using WebApp1.Models;
 
 namespace WebApp1.Controllers {
+    /// <summary>
+    /// 帳號登入
+    /// </summary>
     [Authorize]
     public class AccountController : Controller {
         private ApplicationSignInManager _signInManager;
@@ -42,7 +45,9 @@ namespace WebApp1.Controllers {
             }
         }
 
-        //
+
+
+        //登入
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl) {
@@ -72,7 +77,7 @@ namespace WebApp1.Controllers {
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "登入嘗試失試。");
+                    ModelState.AddModelError("", "登入嘗試失試55。");
                     return View(model);
             }
         }

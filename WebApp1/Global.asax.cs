@@ -16,6 +16,9 @@ namespace WebApp1
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //MVC attribute routes registration (MVC屬性路由註冊)
+            RouteTable.Routes.MapMvcAttributeRoutes();
         }
     }
 }
