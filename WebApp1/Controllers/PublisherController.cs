@@ -8,7 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using WebApp1.Models;
-
+using PagedList;
+//MVC Attribute Routing
 namespace WebApp1.Controllers {
     /// <summary>
     /// 出版社-控制器
@@ -16,19 +17,23 @@ namespace WebApp1.Controllers {
     [RoutePrefix("Publisher")]
     [Route("{action=Index}")]
     public class PublisherController : Controller {
-        /// <summary>Log</summary>
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
+        //Fields and Properties
+        #region
         private AAAAAEntities db = new AAAAAEntities();
+        
+        /// <summary>Log</summary>
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        #endregion
 
 
         // GET: Publisher/Index  (default=12)
         // GET: Publisher/Index/5
-        [Route("Index/{page:int=12}")]     
+        [Route("Index/{page:int=2}")]
         public ActionResult Index(int page) {
             #region
             //取得頁數
             ViewBag.page = page;
+            int pageSize = 10;
 
             //取得新的網址: Publishers?page=111
             //取得目前的網址
@@ -43,13 +48,14 @@ namespace WebApp1.Controllers {
             var currentAction = RouteData.Values["action"];
             ViewBag.currentController = currentController;
 
-            return View(db.Publishers.OrderByDescending(x => x.Num).ToList());
+            return View(db.Publishers.OrderByDescending(x => x.Num).ToPagedList(page, pageSize));
             #endregion
         }
 
         // GET: Publisher/Details/...guid....
         [Route("Details/{id:guid}")]
         public ActionResult Details(Guid? id) {
+            #region
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -58,11 +64,12 @@ namespace WebApp1.Controllers {
                 return HttpNotFound();
             }
             return View(publisher);
+            #endregion
         }
 
 
         
-        
+        [Authorize(Roles = "test")] //角色不對的話, 則會導向至登入
         // GET: Publisher/Create
         public ActionResult Create() {
             return View();

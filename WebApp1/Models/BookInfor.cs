@@ -21,7 +21,7 @@ namespace WebApp1.Models
         }
     
         public string ProductID { get; set; }
-        public Nullable<System.Guid> PublisherID { get; set; }
+        public System.Guid PublisherID { get; set; }
         public System.DateTime IssueDate { get; set; }
         public string ISBN13 { get; set; }
         public string LanguageID { get; set; }

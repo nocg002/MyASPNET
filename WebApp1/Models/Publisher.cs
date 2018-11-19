@@ -11,9 +11,6 @@ namespace WebApp1.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
     
     public partial class Publisher
     {
@@ -24,27 +21,12 @@ namespace WebApp1.Models
         }
     
         public System.Guid PublisherID { get; set; }
-
-        [Required]
-        [StringLength(30)]
         public string PublisherName { get; set; }
-
-        [StringLength(30)]
         public string ContactName { get; set; }
-
-        [StringLength(20)]
         public string Telephone { get; set; }
-
-        [StringLength(20)]
         public string MobilePhone { get; set; }
-
-        [StringLength(50)]
         public string Address { get; set; }
-
-        [StringLength(30)]
         public string Remark { get; set; }
-
-
         public int Num { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

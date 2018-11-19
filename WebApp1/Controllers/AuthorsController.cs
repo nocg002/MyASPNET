@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -10,23 +11,44 @@ using WebApp1.Models;
 
 namespace WebApp1.Controllers {
     /// <summary>
-    /// 作家
+    /// 作家-控制器
     /// </summary>
     [Authorize]
+    [RoutePrefix("Author")]
+    [Route("{action=Index}")]
     public class AuthorController : Controller {
-        /// <summary>Log</summary>
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
+        //Fields and Properties
+        #region
         private AAAAAEntities db = new AAAAAEntities();
 
-        
+        /// <summary>Log</summary>
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        #endregion
+
+
         // GET: Authors
-        public ActionResult Index(int page=1) {
-             //取得頁數
+        public ActionResult Index22(int page = 1) {
+            //取得頁數
             ViewBag.page = page;
             return View(db.Authors.OrderByDescending(x => x.Num).ToList());
         }
 
+        // GET: Admin/Articles
+        [Route("Index/{page:int=3}")]
+        public ActionResult Index(string q, int page) {
+            #region
+            ViewBag.page = page;
+            int pageSize = 10;
+
+            var model = db.Authors.AsQueryable();
+            if (string.IsNullOrWhiteSpace(q) == false) {
+                model = model.Where(x => x.AuthorName.Contains(q));
+            }
+
+            var result = model.OrderByDescending(x => x.Num).ToPagedList(page, pageSize);
+            return View(result);
+            #endregion
+        }
 
         // GET: Authors/Details/5
         public ActionResult Details(Guid? id) {
@@ -40,6 +62,7 @@ namespace WebApp1.Controllers {
             return View(author);
         }
 
+        [Authorize(Roles = "test")] //角色不對的話, 則會導向至登入
         // GET: Authors/Create
         public ActionResult Create() {
             return View();
@@ -60,7 +83,7 @@ namespace WebApp1.Controllers {
         }
 
 
-        [Authorize(Roles = "123")] //角色不對的話, 議會導向至登入
+        [Authorize(Roles = "123")] //角色不對的話, 則會導向至登入
         // GET: Authors/Edit/guid....
         [Route("Edit/{id:guid}")]
         public ActionResult Edit(Guid? id) {

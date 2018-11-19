@@ -26,19 +26,20 @@ namespace WebApp1.Controllers {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         // 11/19
-        private ApplicationRoleManager _roleManager;
+        /*private ApplicationRoleManager _roleManager;
         public ApplicationRoleManager RoleManager
         {
             get
             {
                 return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+
             }
             private set
             {
                 _roleManager = value;
             }
 }
-
+*/
         //Constructor 
         public AccountController() {
         }
@@ -177,7 +178,7 @@ namespace WebApp1.Controllers {
             return View();
         }
 
-        //註冊
+        //註冊 此功能用來比對是否有重複帳號，如無，則允許新創一個帳號
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
@@ -190,18 +191,22 @@ namespace WebApp1.Controllers {
                 if (result.Succeeded) {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                    //將使用者加入角色
+                    #region
                     //角色名稱
                     string roleName = "test";
+
+                    var roleManager = HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+
                     //判斷角色是否存在
-                    //判斷角色是否存在
-                    if (RoleManager.RoleExists(roleName) == false) {
+                    if (roleManager.RoleExists(roleName) == false) {
                         //角色不存在,建立角色
-                        var role = new IdentityRole(roleName);
-                        await RoleManager.CreateAsync(role);
+                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole(roleName);
+                        await roleManager.CreateAsync(role);
                     }
                     //將使用者加入該角色
                     await UserManager.AddToRoleAsync(user.Id, roleName);
-
+                    #endregion
 
                     // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
                     // 傳送包含此連結的電子郵件

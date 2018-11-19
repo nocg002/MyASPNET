@@ -1,0 +1,84 @@
+﻿@model IEnumerable<WebApp1.Models.BookInfor>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+		<th>
+            @Html.DisplayNameFor(model => model.ProductID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssueDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISBN13)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LanguageID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Introduction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuthorAbout)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Catalog)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Preface)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.CategoryID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Publisher.PublisherName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssueDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISBN13)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LanguageID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Introduction)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuthorAbout)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Catalog)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Preface)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.CategoryID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProductID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProductID })
+        </td>
+    </tr>
+}
+
+</table>

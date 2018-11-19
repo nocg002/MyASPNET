@@ -1,4 +1,6 @@
-﻿@model IEnumerable<WebApp1.Models.Publisher>
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<WebApp1.Models.Publisher>
 
 @{
     ViewBag.Title = "Index";
@@ -75,3 +77,5 @@
 }
 
 </table>
+@* 分頁PagedList *@
+@Html.PagedListPager((IPagedList)Model, x => Url.Action("Index", new { page = x }))

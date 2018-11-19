@@ -28,7 +28,7 @@
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="char" MaxLength="7" Nullable="false" />
-          <Property Name="PublisherID" Type="uniqueidentifier" />
+          <Property Name="PublisherID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IssueDate" Type="date" Nullable="false" />
           <Property Name="ISBN13" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="LanguageID" Type="char" MaxLength="1" Nullable="false" />
@@ -46,14 +46,6 @@
           <Property Name="CategoryName" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="Sort" Type="tinyint" />
           <Property Name="Visible" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MyName">
-          <Key>
-            <PropertyRef Name="pubID" />
-          </Key>
-          <Property Name="pubID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductImages">
           <Key>
@@ -98,16 +90,6 @@
           <Property Name="Remark" Type="nvarchar" MaxLength="30" />
           <Property Name="Num" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <Association Name="FK_BookAuthors_Authors">
           <End Role="Authors" Type="Self.Authors" Multiplicity="1" />
           <End Role="BookAuthors" Type="Self.BookAuthors" Multiplicity="*" />
@@ -149,7 +131,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BookInfor_Publishers">
-          <End Role="Publishers" Type="Self.Publishers" Multiplicity="0..1" />
+          <End Role="Publishers" Type="Self.Publishers" Multiplicity="1" />
           <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Publishers">
@@ -191,11 +173,9 @@
           <EntitySet Name="BookAuthors" EntityType="Self.BookAuthors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BookInfor" EntityType="Self.BookInfor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MyName" EntityType="Self.MyName" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductImages" EntityType="Self.ProductImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Publishers" EntityType="Self.Publishers" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BookAuthors_Authors" Association="Self.FK_BookAuthors_Authors">
             <End Role="Authors" EntitySet="Authors" />
             <End Role="BookAuthors" EntitySet="BookAuthors" />
@@ -252,7 +232,7 @@
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="PublisherID" Type="Guid" />
+          <Property Name="PublisherID" Type="Guid" Nullable="false" />
           <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="ISBN13" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LanguageID" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
@@ -274,14 +254,6 @@
           <Property Name="Sort" Type="Byte" />
           <Property Name="Visible" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Products_Categories" FromRole="Categories" ToRole="Products" />
-        </EntityType>
-        <EntityType Name="MyName">
-          <Key>
-            <PropertyRef Name="pubID" />
-          </Key>
-          <Property Name="pubID" Type="Guid" Nullable="false" />
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductImage">
           <Key>
@@ -331,16 +303,6 @@
           <Property Name="Num" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="BookInfors" Relationship="Self.FK_BookInfor_Publishers" FromRole="Publishers" ToRole="BookInfor" />
         </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
         <Association Name="FK_BookAuthors_Authors">
           <End Role="Authors" Type="Self.Author" Multiplicity="1" />
           <End Role="BookAuthors" Type="Self.BookAuthor" Multiplicity="*" />
@@ -382,7 +344,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BookInfor_Publishers">
-          <End Role="Publishers" Type="Self.Publisher" Multiplicity="0..1" />
+          <End Role="Publishers" Type="Self.Publisher" Multiplicity="1" />
           <End Role="BookInfor" Type="Self.BookInfor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Publishers">
@@ -424,11 +386,9 @@
           <EntitySet Name="BookAuthors" EntityType="Self.BookAuthor" />
           <EntitySet Name="BookInfors" EntityType="Self.BookInfor" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
-          <EntitySet Name="MyNames" EntityType="Self.MyName" />
           <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Publishers" EntityType="Self.Publisher" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <AssociationSet Name="FK_BookAuthors_Authors" Association="Self.FK_BookAuthors_Authors">
             <End Role="Authors" EntitySet="Authors" />
             <End Role="BookAuthors" EntitySet="BookAuthors" />
@@ -505,15 +465,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="MyNames">
-            <EntityTypeMapping TypeName="AAAAAModel.MyName">
-              <MappingFragment StoreEntitySet="MyName">
-                <ScalarProperty Name="pubID" ColumnName="pubID" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductImages">
             <EntityTypeMapping TypeName="AAAAAModel.ProductImage">
               <MappingFragment StoreEntitySet="ProductImages">
@@ -557,17 +508,6 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Remark" ColumnName="Remark" />
                 <ScalarProperty Name="Num" ColumnName="Num" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="AAAAAModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

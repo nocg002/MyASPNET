@@ -7,32 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebApp1.Models {
+namespace WebApp1.Models
+{
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class Author {
+    
+    public partial class Author
+    {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Author() {
+        public Author()
+        {
             this.BookAuthors = new HashSet<BookAuthor>();
         }
-
+    
         public System.Guid AuthorID { get; set; }
-
-        [Required]
-        [StringLength(35)]
         public string AuthorName { get; set; }
-
-        [Required]
-        [StringLength(1)]
         public string Gender { get; set; }
-
-        [Required]
         public int Num { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BookAuthor> BookAuthors { get; set; }
     }

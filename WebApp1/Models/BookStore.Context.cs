@@ -29,10 +29,8 @@ namespace WebApp1.Models
         public virtual DbSet<BookAuthor> BookAuthors { get; set; }
         public virtual DbSet<BookInfor> BookInfors { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<MyName> MyNames { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Publisher> Publishers { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

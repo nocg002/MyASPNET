@@ -11,24 +11,37 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using WebApp1.Models;
-
+/* 11/19 教學
+ * https://dotblogs.com.tw/brooke/2014/08/01/146135
+ */
 //Identity設定檔
 namespace WebApp1 {
     //這是Email驗證
     public class EmailService : IIdentityMessageService {
+        //電子郵件驗證, 設定SMTP
         public Task SendAsync(IdentityMessage message) {
+            #region
             // 將您的電子郵件服務外掛到這裡以傳送電子郵件。
             /* 11/18
              * AccountController Register() HttpPost
              * 註冊裡有寄送驗證信件的程式被註解
              * 註冊驗證成功後, AspNetUsers資料表 EmailConfirmed=true
-                System.Web.Helpers.WebMail.SmtpPort = 0;
-                System.Web.Helpers.WebMail.SmtpServer = "smtp位置";
+                //使用WebMail靜態類別時，記得include System.Web.Helpers命名空間
+                // Plug in your email service here to send an email.
+                WebMail.SmtpPort = 25;
+                WebMail.SmtpServer = "smtp-mail.outlook.com";
+                WebMail.UserName = "test@hotmail.com";
+                WebMail.Password = "Password";
+                WebMail.EnableSsl = true;
+                WebMail.From = "test@hotmail.com";
+                WebMail.Send(message.Destination,message.Subject,message.Body);
             */
             return Task.FromResult(0);
+            #endregion
         }
     }
 
+    //傳送簡訊
     public class SmsService : IIdentityMessageService {
         public Task SendAsync(IdentityMessage message) {
             // 將您的 SMS 服務外掛到這裡以傳送簡訊。
@@ -42,9 +55,9 @@ namespace WebApp1 {
             : base(store) {
         }
 
-
-        //11/18 創建帳號
+        //創建使用者 帳號與密碼驗證規則
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) {
+            #region
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // 設定使用者名稱的驗證邏輯
             manager.UserValidator = new UserValidator<ApplicationUser>(manager) {
@@ -83,6 +96,7 @@ namespace WebApp1 {
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+            #endregion
         }
     }
 
@@ -102,16 +116,18 @@ namespace WebApp1 {
     }
 
 
-
-    //11/19 建立角色
-    //之後要在 Startup.Auth.cs app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+    //之後要在 Startup.Auth.cs app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create); 
+    //11/19 add
+    // 增加角色管理員相關的設定
     public class ApplicationRoleManager : RoleManager<IdentityRole> {
-        public ApplicationRoleManager(IRoleStore<IdentityRole,string> roleStore):base(roleStore) { 
-        
+        public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
+            : base(roleStore) {
         }
 
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context) {
             return new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>()));
         }
     }
+
+
 }
