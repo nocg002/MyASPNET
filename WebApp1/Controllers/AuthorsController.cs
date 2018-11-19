@@ -9,7 +9,10 @@ using System.Web.Mvc;
 using WebApp1.Models;
 
 namespace WebApp1.Controllers {
-    
+    /// <summary>
+    /// 作家
+    /// </summary>
+    [Authorize]
     public class AuthorController : Controller {
         /// <summary>Log</summary>
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -57,6 +60,7 @@ namespace WebApp1.Controllers {
         }
 
 
+        [Authorize(Roles = "123")] //角色不對的話, 議會導向至登入
         // GET: Authors/Edit/guid....
         [Route("Edit/{id:guid}")]
         public ActionResult Edit(Guid? id) {

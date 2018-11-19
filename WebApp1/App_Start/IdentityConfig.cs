@@ -12,10 +12,19 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using WebApp1.Models;
 
+//Identity設定檔
 namespace WebApp1 {
+    //這是Email驗證
     public class EmailService : IIdentityMessageService {
         public Task SendAsync(IdentityMessage message) {
             // 將您的電子郵件服務外掛到這裡以傳送電子郵件。
+            /* 11/18
+             * AccountController Register() HttpPost
+             * 註冊裡有寄送驗證信件的程式被註解
+             * 註冊驗證成功後, AspNetUsers資料表 EmailConfirmed=true
+                System.Web.Helpers.WebMail.SmtpPort = 0;
+                System.Web.Helpers.WebMail.SmtpServer = "smtp位置";
+            */
             return Task.FromResult(0);
         }
     }
@@ -33,21 +42,23 @@ namespace WebApp1 {
             : base(store) {
         }
 
+
+        //11/18 創建帳號
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // 設定使用者名稱的驗證邏輯
             manager.UserValidator = new UserValidator<ApplicationUser>(manager) {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                AllowOnlyAlphanumericUserNames = false, //允許使用者名稱只有數字
+                RequireUniqueEmail = true //mail須唯一
             };
 
             // 設定密碼的驗證邏輯
             manager.PasswordValidator = new PasswordValidator {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequiredLength = 6, //密碼最小長度
+                RequireNonLetterOrDigit = true, //必須包含特殊字元
+                RequireDigit = true, //必須包含數字
+                RequireLowercase = true, //必須包含小寫
+                RequireUppercase = false, //必須包含大寫 true
             };
 
             // 設定使用者鎖定詳細資料
@@ -87,6 +98,20 @@ namespace WebApp1 {
 
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context) {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+    }
+
+
+
+    //11/19 建立角色
+    //之後要在 Startup.Auth.cs app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+    public class ApplicationRoleManager : RoleManager<IdentityRole> {
+        public ApplicationRoleManager(IRoleStore<IdentityRole,string> roleStore):base(roleStore) { 
+        
+        }
+
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context) {
+            return new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>()));
         }
     }
 }

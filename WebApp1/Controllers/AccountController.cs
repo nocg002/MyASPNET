@@ -6,22 +6,42 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebApp1.Models;
 
+/*
+ * 註冊 登入 登出 
+ * 忘記密碼 修改密碼 外部登入
+ */
 namespace WebApp1.Controllers {
     /// <summary>
     /// 帳號登入
     /// </summary>
     [Authorize]
     public class AccountController : Controller {
+        //Fields and Properties
+        #region
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        // 11/19
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+}
 
+        //Constructor 
         public AccountController() {
         }
-
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -45,26 +65,47 @@ namespace WebApp1.Controllers {
             }
         }
 
+        /// <summary>Log</summary>
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        #endregion
 
 
         //登入
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl) {
+            #region
             ViewBag.ReturnUrl = returnUrl;
             return View();
+            #endregion
         }
 
-        //
+        //登入
         // POST: /Account/Login
         [HttpPost]
-        [AllowAnonymous]
+        [AllowAnonymous] //將控制器和動作標記為在授權期間, 略過AuthorizeAttribute的屬性
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl) {
+            #region
             if (!ModelState.IsValid) {
                 return View(model);
             }
 
+
+            //11/18 user: ApplicationUser(IdentityModels.cs)
+            /*var user = await UserManager.FindAsync(model.Email, model.Password);
+            if (user != null) {
+                logger.Debug("Id=" + user.Id + "Email=" + user.Email);
+                await SignInManager.SignInAsync(user, isPersistent:true, rememberBrowser:model.RememberMe);
+                
+                return RedirectToLocal(returnUrl);
+            } else { 
+                ModelState.AddModelError("", "無效的使用者名稱和密碼6。");
+            }
+            
+            return View(model);*/
+
+            
             // 這不會計算為帳戶鎖定的登入失敗
             // 若要啟用密碼失敗來觸發帳戶鎖定，請變更為 shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -80,7 +121,16 @@ namespace WebApp1.Controllers {
                     ModelState.AddModelError("", "登入嘗試失試55。");
                     return View(model);
             }
+            #endregion
         }
+        
+        
+
+
+
+
+
+
 
         //
         // GET: /Account/VerifyCode
@@ -120,24 +170,38 @@ namespace WebApp1.Controllers {
             }
         }
 
-        //
+        //註冊
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register() {
             return View();
         }
 
-        //
+        //註冊
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model) {
+            #region
             if (ModelState.IsValid) {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    //角色名稱
+                    string roleName = "test";
+                    //判斷角色是否存在
+                    //判斷角色是否存在
+                    if (RoleManager.RoleExists(roleName) == false) {
+                        //角色不存在,建立角色
+                        var role = new IdentityRole(roleName);
+                        await RoleManager.CreateAsync(role);
+                    }
+                    //將使用者加入該角色
+                    await UserManager.AddToRoleAsync(user.Id, roleName);
+
 
                     // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
                     // 傳送包含此連結的電子郵件
@@ -147,22 +211,51 @@ namespace WebApp1.Controllers {
 
                     return RedirectToAction("Index", "Home");
                 }
+
                 AddErrors(result);
             }
 
             // 如果執行到這裡，發生某項失敗，則重新顯示表單
             return View(model);
+            #endregion
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code) {
+            #region
             if (userId == null || code == null) {
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            #endregion
         }
 
         //
@@ -178,6 +271,7 @@ namespace WebApp1.Controllers {
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model) {
+            #region
             if (ModelState.IsValid) {
                 var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id))) {
@@ -195,6 +289,7 @@ namespace WebApp1.Controllers {
 
             // 如果執行到這裡，發生某項失敗，則重新顯示表單
             return View(model);
+            #endregion
         }
 
         //
@@ -217,6 +312,7 @@ namespace WebApp1.Controllers {
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model) {
+            #region
             if (!ModelState.IsValid) {
                 return View(model);
             }
@@ -231,6 +327,7 @@ namespace WebApp1.Controllers {
             }
             AddErrors(result);
             return View();
+            #endregion
         }
 
         //
@@ -420,3 +517,18 @@ namespace WebApp1.Controllers {
         #endregion
     }
 }
+
+
+
+/*
+    //no
+    public ActionResult VerifyMail() {
+        #region
+        if (User.Identity.IsAuthenticated) {
+            return View();
+        }
+
+        return RedirectToAction("Login");
+        #endregion
+    }
+*/

@@ -12,7 +12,7 @@ namespace WebApp1.Controllers {
     [Route("{action=Index}")]
     public class HomeController : Controller {
         /// <summary>Log</summary>
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         //[Route("~/")]
         [Route]                 // GET: localhost:63211
@@ -31,6 +31,8 @@ namespace WebApp1.Controllers {
             return View();
         }
 
+
+        
         // GET: /Contact
         [Route("Contact")]
         [Route("aasddff")]
